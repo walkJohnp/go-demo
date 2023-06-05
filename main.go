@@ -1,24 +1,25 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
+	"fmt"
 	"github.com/walkjohnp/go-demo/global"
-	"github.com/walkjohnp/go-demo/orm"
+	"github.com/walkjohnp/go-demo/router"
+	"net/http"
 )
 
 func main() {
 	// 初始化
 	global.Init()
-	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
 
-	r.GET("user", func(context *gin.Context) {
-		user, _ := orm.ListUser()
-		context.JSON(200, user)
-	})
-	r.Run() // 监听并在 0.0.0.0:8080 上启动服务
+	// 初始化路由
+	rr := router.Init()
+
+	server := &http.Server{
+		Addr:    ":8080",
+		Handler: rr.Handler(),
+	}
+
+	if err := server.ListenAndServe(); err != nil {
+		fmt.Println("error" + err.Error())
+	}
 }

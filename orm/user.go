@@ -13,7 +13,7 @@ type User struct {
 }
 
 func ListUser() ([]User, error) {
-	db := global.GLOBAL_DB.Model(&User{})
+	db := global.Db.Model(&User{})
 
 	db.AutoMigrate(&User{})
 
