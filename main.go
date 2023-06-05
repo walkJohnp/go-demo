@@ -1,11 +1,24 @@
 package main
 
 import (
-	"fmt"
-	open_ai "github.com/walkjohnp/go-demo/open-ai01"
+	"github.com/gin-gonic/gin"
+	"github.com/walkjohnp/go-demo/global"
+	"github.com/walkjohnp/go-demo/orm"
 )
 
 func main() {
-	fmt.Println("hello world!")
-	open_ai.TestGpt()
+	// 初始化
+	global.Init()
+	r := gin.Default()
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+
+	r.GET("user", func(context *gin.Context) {
+		user, _ := orm.ListUser()
+		context.JSON(200, user)
+	})
+	r.Run() // 监听并在 0.0.0.0:8080 上启动服务
 }
